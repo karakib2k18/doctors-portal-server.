@@ -5,10 +5,14 @@ const admin = require("firebase-admin");
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const ObjectId = require('mongodb').ObjectId;
-// const stripe = require('stripe')(process.env.STRIPE_SECRET)
+const fileUpload = require("express-fileupload");
+
 
 //STRIPE_SECRET ADD 
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
+
+//file upload middleware
+app.use(fileUpload());
 
 const port = process.env.PORT || 5000;
 
@@ -51,6 +55,7 @@ async function run() {
         const database = client.db('doctors_portal');
         const appointmentsCollection = database.collection('appointments');
         const usersCollection = database.collection('users');
+        const doctorsCollection = database.collection('doctors');
 
         app.get('/appointments', verifyToken, async (req, res) => {
             const email = req.query.email;
@@ -86,6 +91,35 @@ async function run() {
                 }
             };
             const result = await appointmentsCollection.updateOne(filter, updateDoc);
+            res.json(result);
+        });
+
+        // doctors api
+        app.get('/doctors', async (req, res) => {
+            const cursor = doctorsCollection.find({});
+            const doctors = await cursor.toArray();
+            res.json(doctors);
+        });
+
+        app.get('/doctors/:id', async (req, res) => {
+            const query = { _id: ObjectId(req.params.id) }
+            const doctor = await doctorsCollection.findOne(query);
+            res.json(doctor);
+        });
+
+        app.post('/doctors', async (req, res) => {
+            const name = req.body.name;
+            const email = req.body.email;
+            const pic = req.files.image;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imageBuffer = Buffer.from(encodedPic, 'base64');
+            const doctor = {
+                name,
+                email,
+                image: imageBuffer
+            }
+            const result = await doctorsCollection.insertOne(doctor);
             res.json(result);
         })
 
@@ -150,6 +184,7 @@ async function run() {
         // await client.close();
     }
 }
+
 
 run().catch(console.dir);
 
