@@ -187,11 +187,11 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-    res.send('Hello Doctors portal!')
+    res.send('Hello Doctors portal WELCOME!')
 })
 
 app.listen(port, () => {
-    console.log(`listening at ${port}`)
+    console.log(`listening at  ${port}`)
 })
 
 // app.get('/users')
