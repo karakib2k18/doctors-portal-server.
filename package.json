@@ -19,5 +19,14 @@
     "firebase-admin": "^10.0.0",
     "mongodb": "^4.1.4",
     "stripe": "^8.189.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://karakib2k18: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@github.com/karakib2k18/doctors-portal-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/karakib2k18/doctors-portal-server/issues"
+  },
+  "homepage": "https://github.com/karakib2k18/doctors-portal-server#readme"
 }
